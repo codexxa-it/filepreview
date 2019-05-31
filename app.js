@@ -13,7 +13,7 @@ const util              = require('util');
 const winston           = require('winston');
 const DailyRotateFile   = require('winston-daily-rotate-file');
 const xml2js            = require('xml2js');
-
+const qs                = require('qs');
 
 // get mimetype definitions from filepreview-es6 package
 const mimetypes         = require('./node_modules/filepreview-es6/db.json');
@@ -203,15 +203,17 @@ function checkDownload(download_url, done, next){
 
 function downloadFile(options, download_url, ext, done, next){
     const downloadFileObj = tmp.fileSync({postfix: '.' + ext});
-    logger.debug('create temp download file: ' + downloadFileObj.name);
+    logger.debug('create temp download file: ' + downloadFileObj.name);    
 
     const file = fs.createWriteStream(downloadFileObj.name);
     file.on('finish', function(){
+        // fs.copyFileSync(downloadFileObj.name, '/preview/' + downloadFileObj.name.split('/')[2] );
         const previewFileObj = tmp.fileSync({postfix: '.' + options.outputFormat});
         logger.debug('create temp preview file: ' + previewFileObj.name);
 
         filepreview.generateAsync(downloadFileObj.name, previewFileObj.name, options)
             .then(function(){
+
                 downloadFileObj.removeCallback();
                 next(previewFileObj);
             }).catch(function(error) {
@@ -233,15 +235,20 @@ function downloadFile(options, download_url, ext, done, next){
 
 function uploadFile(previewFileObj, signed_s3_url, options, done){
     logger.debug('uploadFile called');
+    // fs.copyFileSync(previewFileObj.name, '/preview/' + previewFileObj.name.split('/')[2] );
     fs.readFile(previewFileObj.name, function (error, data) {
         if (error) {
             logger.error(error);
             done(new Error(error));
         }
         logger.debug('upload file to AWS');
+        const formData = {
+            data: data.toString('base64')
+        }
         request.put({
-            headers: {'content-type' : util.format('image/%s', options.outputFormat)},
-            body: data,
+            // headers: {'content-type' : util.format('image/%s', options.outputFormat)},
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            body: qs.stringify(formData),
             url: signed_s3_url
 
         }, function(error, response, body){

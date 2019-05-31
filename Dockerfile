@@ -11,6 +11,8 @@ COPY . /home/node/app
 
 RUN cd /home/node/app && npm install 
 
+RUN mkdir /preview
+
 WORKDIR /home/node/app
 EXPOSE 3000
 

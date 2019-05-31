@@ -22,7 +22,8 @@
     "util": "^0.11.0",
     "winston": "^3.0.0",
     "winston-daily-rotate-file": "^3.2.1",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "qs": "^6.6.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

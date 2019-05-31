@@ -64,3 +64,11 @@ In production mode, however, an existing `docker-compose.yml` file can already b
 ## Non-Docker installation
 If docker should not be used, the service can be installed in a Debian Stretch virtual machine (or container).
 Adapt installation procedure from `Dockerfile`. Set the environment variables according to the `docker-compose.yml`.
+
+## Docker build
+```
+docker build --rm -t pbsnet/filepreview:latest .
+```
+
+### File Preview tests
+http://localhost:8090/BJDGIWwcuyvsEnRoYbfORRSmGBZlZQfZ51II9XCYp5uUf3yexw7d2VUl0qU9-eAQQr6RprsJZ9olC0AWtt-uiec/Qma8jsQS6Pmvwfo4cQptFA77pSc3mbfnbQbgTKM1jetXPp/wifey.jpg
