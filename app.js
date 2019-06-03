@@ -187,11 +187,15 @@ function handleFilePreview(options, download_url, signed_s3_url, done){
 
 function checkDownload(download_url, done, next){
     // get extension by by Content-Type
-    request.head(download_url, {timeout: 10000}, function (error, response) {
+    request.head(download_url, {timeout: 10000}, function (error, response) {        
         if (error || response.statusCode > 200) {
             return done(new Error('could not get download_url meta data'));
-        }
-        if (!mimetypes[response.headers['content-type']].extensions[0]){
+        }        
+        try {
+            if (!mimetypes[response.headers['content-type']].extensions[0]){
+                return done(new Error('not supported content-type'));
+            }
+        } catch (e) {
             return done(new Error('not supported content-type'));
         }
         logger.debug(response.headers);
