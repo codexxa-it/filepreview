@@ -126,7 +126,7 @@ function createJob(options, download_url, signed_s3_url, callback_url){
         signed_s3_url, signed_s3_url
     });
 
-    job.attempts(2).backoff(true).save();
+    job.attempts(2).backoff({delay:10*1000}).save();
 
     job.on('failed', function (error) {
         logger.info(util.format('failed job, result: %s', error));
